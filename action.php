@@ -2,51 +2,49 @@
 //Database connection by using PHP PDO
 $username = 'root';
 $password = '';
-$connection = new PDO( 'mysql:host=localhost;dbname=crud', $username, $password ); // Create Object of PDO class by connecting to Mysql database
+$connection = new PDO( 'mysql:host=localhost;dbname=ajax', $username, $password ); // Create Object of PDO class by connecting to Mysql database
 
 if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is set to not
 {
  //載入所有聯絡人資料
  if($_POST["action"] == "Load") 
  {
-  $statement = $connection->prepare("SELECT * FROM customers ORDER BY id DESC");
+  $statement = $connection->prepare("SELECT * FROM member ORDER BY id DESC");
   $statement->execute();
   $result = $statement->fetchAll();
   $output = '';
   $output .= '
-   <table class="table table-striped table-bordered table-hover">
-    <tr>
-     <th width="15%">姓名</th>
-     <th width="15%">電話</th>
-     <th width="25%">電子信箱</th>
-     <th width="40%">地址</th>
-     <th width="10%">操作</th>
-     <th width="10%">動作</th>
+  <table class="table table-striped  table-hover">
+    <tr class="info">
+      <th width="15%">姓名</th>
+      <th width="15%">電話</th>
+      <th width="25%">電子信箱</th>
+      <th width="40%">地址</th>
+      <th width="10%">操作</th>
+      <th width="10%">動作</th>
     </tr>
   ';
   if($statement->rowCount() > 0)
   {
-   foreach($result as $row)
-   {
+    foreach($result as $row)
+    {
     $output .= '
-    <tr>
-     <td>'.$row["name"].'</td>
-     <td>'.$row["phone"].'</td>
-     <td>'.$row["email"].'</td>
-     <td>'.$row["city"].' - '.$row["address"].'</td>
-     <td><button type="button" id="'.$row["id"].'" class="btn btn-warning btn update" style="border-Radius: 0px;"
-     >編輯</button></td>
-     <td><button type="button" id="'.$row["id"].'" class="btn btn-danger btn delete" style="border-Radius: 0px;"
-     >刪除</button></td>
+    <tr >
+      <td>'.$row["name"].'</td>
+      <td>'.$row["phone"].'</td>
+      <td>'.$row["email"].'</td>
+      <td>'.$row["city"].'  '.$row["address"].'</td>
+      <td><button type="button" id="'.$row["id"].'" class="btn btn-warning btn update" style="border-Radius: 0px;">編輯</button></td>
+      <td><button type="button" id="'.$row["id"].'" class="btn btn-danger btn delete" style="border-Radius: 0px;">刪除</button></td>
     </tr>
     ';
-   }
+    }
   }
   else
   {
    $output .= '
     <tr>
-     <td align="center">Data not Found</td>
+      <td align="center">無任何聯絡人資料!</td>
     </tr>
    ';
   }
@@ -58,8 +56,8 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
  if($_POST["action"] == "新增")
  {
   $statement = $connection->prepare("
-   INSERT INTO customers (name, ename, phone, email, sex, city, township, postcode, address, notes) 
-   VALUES (:name, :ename, :phone, :email, :sex, :city, :township, :postcode, :address, :notes)
+   INSERT INTO member (name, ename, phone, email, sex, city, township, postcode, address, notes, created_at, updated_at) 
+   VALUES (:name, :ename, :phone, :email, :sex, :city, :township, :postcode, :address, :notes,now(),now())
   ");
   $result = $statement->execute(
    array(
@@ -72,7 +70,7 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
     ':township' => $_POST["township"],
     ':postcode' => $_POST["postcode"],
     ':address' => $_POST["address"],
-    ':notes' => $_POST["notes"]
+    ':notes' => $_POST["notes"],
    )
   );
   // if(!empty($result))
@@ -86,7 +84,7 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
  {
   $output = array();
   $statement = $connection->prepare(
-   "SELECT * FROM customers 
+   "SELECT * FROM member 
    WHERE id = '".$_POST["id"]."' 
    LIMIT 1"
   );
@@ -112,8 +110,8 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
  if($_POST["action"] == "編輯")
  {
   $statement = $connection->prepare(
-   "UPDATE customers 
-   SET name = :name, ename = :ename, phone = :phone, email = :email, sex = :sex, city = :city, township = :township, postcode = :postcode, address = :address, notes = :notes
+   "UPDATE member 
+   SET name = :name, ename = :ename, phone = :phone, email = :email, sex = :sex, city = :city, township = :township, postcode = :postcode, address = :address, notes = :notes,updated_at = now()
    WHERE id = :id
    "
   );
@@ -142,7 +140,7 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
  if($_POST["action"] == "Delete")
  {
   $statement = $connection->prepare(
-   "DELETE FROM customers WHERE id = :id"
+   "DELETE FROM member WHERE id = :id"
   );
   $result = $statement->execute(
    array(
