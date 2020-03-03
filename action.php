@@ -1,7 +1,7 @@
 <?php
 //Database connection by using PHP PDO
 $username = 'root';
-$password = '';
+$password = 'ChungYONLYsec01-5678';
 $connection = new PDO( 'mysql:host=localhost;dbname=ajax;charset=utf8', $username, $password ); // Create Object of PDO class by connecting to Mysql database
 
 if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is set to not
@@ -9,7 +9,7 @@ if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is 
  //載入所有聯絡人資料
  if($_POST["action"] == "Load") 
  {
-  $statement = $connection->prepare("SELECT * FROM member ORDER BY id DESC");
+  $statement = $connection->prepare("SELECT * FROM member");
   $statement->execute();
   $result = $statement->fetchAll();
   $output = '';
