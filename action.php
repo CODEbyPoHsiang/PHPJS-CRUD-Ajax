@@ -2,7 +2,7 @@
 //Database connection by using PHP PDO
 $username = 'root';
 $password = '';
-$connection = new PDO( 'mysql:host=localhost;dbname=ajax', $username, $password ); // Create Object of PDO class by connecting to Mysql database
+$connection = new PDO( 'mysql:host=localhost;dbname=ajax;charset=utf8', $username, $password ); // Create Object of PDO class by connecting to Mysql database
 
 if(isset($_POST["action"])) //Check value of $_POST["action"] variable value is set to not
 {
